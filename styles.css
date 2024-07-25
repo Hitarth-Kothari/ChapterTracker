@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    width: 400px;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    padding: 10px;
+}
+
+input, textarea, button {
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #444444;
+    padding: 5px;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555555;
+}
+
+.book-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333333;
+    padding: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #444444;
+}
+
+.book-item div {
+    display: flex;
+    gap: 5px;
+}
+
+.book-item button {
+    width: auto;
+    background-color: #555555;
+    border: 1px solid #666666;
+    padding: 2px 5px;
+}
+
+.book-item button:hover {
+    background-color: #666666;
+}
