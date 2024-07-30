@@ -7,8 +7,12 @@ function parseLink(link) {
       const parts = url.pathname.split('/');
       const chapterNumber = parseInt(parts.pop(), 10);
       if (!isNaN(chapterNumber)) {
+        // Extract book name parts
         let bookNameParts = parts.slice(2, -1).join(' ').split('-');
-        bookNameParts.pop();
+        
+        // Remove random tag if present
+        bookNameParts = bookNameParts.filter(part => !(/[a-zA-Z]/.test(part) && /\d/.test(part)));
+
         const bookName = bookNameParts.join(' ');
         const capitalizedBookName = bookName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
