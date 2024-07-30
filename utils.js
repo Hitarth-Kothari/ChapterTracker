@@ -1,6 +1,6 @@
 const allowedHostnames = ['asuracomic.net']; // Add more allowed hostnames as needed
 
-function parseLink(link) { // Add more parsing based on the website you read on
+function parseLink(link) {
   try {
     const url = new URL(link);
     if (allowedHostnames.includes(url.hostname)) {
@@ -13,9 +13,11 @@ function parseLink(link) { // Add more parsing based on the website you read on
         const capitalizedBookName = bookName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
         return [capitalizedBookName, chapterNumber];
+      } else {
+        console.log('No valid chapter number found in URL.');
+        return [null, null];
       }
     } else {
-      console.log(url.hostname);
       console.log('URL does not match allowed hostnames, skipping parse.');
       return [null, null];
     }
