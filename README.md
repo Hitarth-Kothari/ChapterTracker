@@ -10,6 +10,7 @@ A Chrome extension to track the books you are reading along with their chapters.
 - Increment or decrement the chapter number using a number input field.
 - Delete a book from the list using a delete button.
 - Search for books by name.
+- Notifications to update or add books based on the current chapter.
 
 ## Installation
 
@@ -27,10 +28,16 @@ A Chrome extension to track the books you are reading along with their chapters.
 5. Use the search bar to filter books by name.
 6. Adjust the chapter number using the increment/decrement arrows in the number input field.
 7. Click the red strip on the right side of a book item to delete it from the list.
+8. The extension will check if the user visits a link from a supported site and notify them if they want to add or update the book's chapter.
+
+## Supported Sites
+
+- Currently only supports `asuracomic.net`.
 
 ## File Structure
 
 - `manifest.json`: Contains the metadata for the Chrome extension.
+- `background.js`: Handles the background tasks such as monitoring tabs and sending notifications.
 - `popup.html`: The HTML structure for the popup interface.
 - `popup.js`: The JavaScript logic for handling the popup functionality.
 - `styles.css`: Custom styles for the popup interface.
