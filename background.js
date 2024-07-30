@@ -7,14 +7,15 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log('Parsed link:', bookName, chapterNumber);
     if (bookName && chapterNumber) {
       chrome.storage.local.get(['books', 'notificationsEnabled'], function(result) {
-        const books = result.books || [];
         const notificationsEnabled = result.notificationsEnabled !== false;
-        const book = books.find(b => b.bookName === bookName);
 
         if (!notificationsEnabled) {
           console.log('Notifications are disabled.');
           return;
         }
+
+        const books = result.books || [];
+        const book = books.find(b => b.bookName === bookName);
 
         if (book) {
           if (chapterNumber > book.chapterNumber) {
