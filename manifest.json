@@ -4,6 +4,9 @@
   "version": "1.0",
   "description": "Store and manage book chapters.",
   "permissions": ["storage", "tabs", "notifications"],
+  "icons": {
+    "128": "icon.png"
+  },
   "background": {
     "service_worker": "background.js"
   },
