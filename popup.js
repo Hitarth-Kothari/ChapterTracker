@@ -104,28 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
     booksList.appendChild(bookItem);
   }
 
-  function parseLink(link) {
-    try {
-      const url = new URL(link);
-      if (url.hostname === 'asuracomics.net') {
-        const parts = url.pathname.split('/');
-        const chapterNumber = parseInt(parts.pop(), 10);
-        let bookNameParts = parts.slice(2, -1).join(' ').split('-');
-        bookNameParts.pop();
-        const bookName = bookNameParts.join(' ');
-        const capitalizedBookName = bookName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-  
-        return [capitalizedBookName, chapterNumber];
-      } else {
-        console.log('URL does not match asuracomics.net, skipping parse.');
-        return [null, null];
-      }
-    } catch (error) {
-      console.error('Error parsing link:', error);
-      return [null, null];
-    }
-  }
-
   searchBar.addEventListener('input', function() {
     const query = this.value.trim().toLowerCase();
     chrome.storage.local.get(['books'], function(result) {
