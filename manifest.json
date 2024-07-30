@@ -12,7 +12,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["chrome_icon.png", "utils.js"],
+      "resources": ["icon.png", "utils.js", "storageHandler.js"],
       "matches": ["<all_urls>"]
     }
   ]

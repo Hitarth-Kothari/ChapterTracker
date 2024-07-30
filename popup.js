@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
   const saveButton = document.getElementById('save');
   const linkInput = document.getElementById('link-input');
   const booksList = document.getElementById('books-list');
@@ -10,12 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const searchBar = document.getElementById('search-bar');
 
   // Load notification setting
-  chrome.storage.local.get(['notificationsEnabled'], function(result) {
-    const notificationsEnabled = result.notificationsEnabled !== false;
-    toggleNotifications.checked = notificationsEnabled;
-    notificationsCheckbox.classList.toggle('bg-green-500', notificationsEnabled);
-    notificationsCheckbox.classList.toggle('bg-gray-600', !notificationsEnabled);
-  });
+  const notificationsEnabled = await getLocalData('notificationsEnabled') !== false;
+  toggleNotifications.checked = notificationsEnabled;
+  notificationsCheckbox.classList.toggle('bg-green-500', notificationsEnabled);
+  notificationsCheckbox.classList.toggle('bg-gray-600', !notificationsEnabled);
 
   // Toggle input fields visibility and checkbox style
   toggleInputs.addEventListener('change', function() {
@@ -27,30 +25,28 @@ document.addEventListener('DOMContentLoaded', function() {
   // Toggle notifications
   toggleNotifications.addEventListener('change', function() {
     const enabled = this.checked;
-    chrome.storage.local.set({ notificationsEnabled: enabled });
+    setLocalData('notificationsEnabled', enabled);
     notificationsCheckbox.classList.toggle('bg-green-500', enabled);
     notificationsCheckbox.classList.toggle('bg-gray-600', !enabled);
   });
 
-  // Load saved books
-  chrome.storage.local.get(['books'], function(result) {
-    const books = result.books || [];
-    books.forEach(book => addBookToDOM(book));
-  });
+  // Load saved books from local storage first, then fall back to sync storage if empty
+  let books = await getLocalData('books') || [];
+  if (books.length === 0) {
+    books = await getSyncData('books') || [];
+  }
+  books.forEach(book => addBookToDOM(book));
 
   // Save book
-  saveButton.addEventListener('click', function() {
+  saveButton.addEventListener('click', async function() {
     const link = linkInput.value.trim();
     if (link) {
       const [bookName, chapterNumber] = parseLink(link);
-      chrome.storage.local.get(['books'], function(result) {
-        const books = result.books || [];
-        books.push({ bookName, chapterNumber });
-        chrome.storage.local.set({ books }, function() {
-          addBookToDOM({ bookName, chapterNumber });
-          linkInput.value = '';
-        });
-      });
+      let books = await getLocalData('books') || [];
+      books.push({ bookName, chapterNumber });
+      await setLocalData('books', books);
+      addBookToDOM({ bookName, chapterNumber });
+      linkInput.value = '';
     }
   });
 
@@ -69,31 +65,26 @@ document.addEventListener('DOMContentLoaded', function() {
     numberInput.type = 'number';
     numberInput.value = book.chapterNumber;
     numberInput.className = 'bg-gray-800 border border-gray-600 flex items-center text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1 w-16 mr-2';
-    numberInput.addEventListener('change', function() {
+    numberInput.addEventListener('change', async function() {
       const newChapterNumber = numberInput.value;
-      chrome.storage.local.get(['books'], function(result) {
-        const books = result.books || [];
-        const updatedBooks = books.map(b => {
-          if (b.bookName === book.bookName) {
-            return { bookName: b.bookName, chapterNumber: newChapterNumber };
-          }
-          return b;
-        });
-        chrome.storage.local.set({ books: updatedBooks });
+      let books = await getLocalData('books') || [];
+      const updatedBooks = books.map(b => {
+        if (b.bookName === book.bookName) {
+          return { bookName: b.bookName, chapterNumber: newChapterNumber };
+        }
+        return b;
       });
+      await setLocalData('books', updatedBooks);
     });
 
     const deleteStrip = document.createElement('div');
     deleteStrip.className = 'absolute top-0 right-0 h-full w-2 bg-red-600 hover:bg-red-700 cursor-pointer rounded-r-2xl';
-    deleteStrip.addEventListener('click', function(event) {
+    deleteStrip.addEventListener('click', async function(event) {
       event.stopPropagation();  // Prevent any other click event
-      chrome.storage.local.get(['books'], function(result) {
-        const books = result.books || [];
-        const newBooks = books.filter(b => b.bookName !== book.bookName || b.chapterNumber !== book.chapterNumber);
-        chrome.storage.local.set({ books: newBooks }, function() {
-          booksList.removeChild(bookItem);
-        });
-      });
+      let books = await getLocalData('books') || [];
+      const newBooks = books.filter(b => b.bookName !== book.bookName || b.chapterNumber !== book.chapterNumber);
+      await setLocalData('books', newBooks);
+      booksList.removeChild(bookItem);
     });
 
     numberInputContainer.appendChild(numberInput);
@@ -104,13 +95,11 @@ document.addEventListener('DOMContentLoaded', function() {
     booksList.appendChild(bookItem);
   }
 
-  searchBar.addEventListener('input', function() {
+  searchBar.addEventListener('input', async function() {
     const query = this.value.trim().toLowerCase();
-    chrome.storage.local.get(['books'], function(result) {
-      const books = result.books || [];
-      const filteredBooks = books.filter(book => book.bookName.toLowerCase().includes(query));
-      booksList.innerHTML = '';
-      filteredBooks.forEach(book => addBookToDOM(book));
-    });
+    let books = await getLocalData('books') || [];
+    const filteredBooks = books.filter(book => book.bookName.toLowerCase().includes(query));
+    booksList.innerHTML = '';
+    filteredBooks.forEach(book => addBookToDOM(book));
   });
 });
