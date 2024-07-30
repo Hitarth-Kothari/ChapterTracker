@@ -1,24 +1,31 @@
 importScripts('storageHandler.js');
-importScripts('utils.js');
+importScripts('parser.js');
 
 chrome.runtime.onStartup.addListener(async () => {
   const books = await getLocalData('books') || [];
   if (books.length === 0) {
     await pullDataFromCloud();
   } else {
-    // const shouldSyncResult = await shouldSync();
-    // if (shouldSyncResult) {
+    const shouldSyncResult = await shouldSync();
+    if (shouldSyncResult) {
       await syncDataToCloud();
-    // }
+    }
   }
 });
+
+let notificationsDisabledLogged = false;
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   const notificationsEnabled = await getLocalData('notificationsEnabled') !== false;
   if (!notificationsEnabled) {
-    console.log('Notifications are disabled.');
+    if (!notificationsDisabledLogged) {
+      console.log('Notifications are disabled.');
+      notificationsDisabledLogged = true;
+    }
     return;
   }
+
+  notificationsDisabledLogged = false;  // Reset the flag if notifications are enabled
 
   console.log('Tab updated:', tabId, changeInfo, tab);
   if (changeInfo.status === 'complete' && tab.url) {

@@ -9,8 +9,8 @@ A Chrome extension to track the books you are reading along with their chapters.
 3. [Usage](#usage)
 4. [Supported Sites](#supported-sites)
 5. [File Structure](#file-structure)
-6. [Contributing](#contributing)
-7. [Data Storage](#data-storage)
+6. [Data Storage](#data-storage)
+7. [Contributing](#contributing)
 8. [Disclaimer](#disclaimer)
 
 ## Features
@@ -50,11 +50,21 @@ A Chrome extension to track the books you are reading along with their chapters.
 ## File Structure
 
 - `manifest.json`: Contains the metadata for the Chrome extension.
-- `background.js`: Handles the background tasks such as monitoring tabs and sending notifications.
+- `background.js`: Handles the background tasks such as monitoring tabs, syncing data to the cloud, and pulling data from the cloud if local data is empty.
 - `popup.html`: The HTML structure for the popup interface.
 - `popup.js`: The JavaScript logic for handling the popup functionality.
-- `utils.js`: Contains shared functions and constants used by other scripts.
+- `parser.js`: Contains function to parse a URL Link.
 - `styles.css`: Custom styles for the popup interface.
+- `storageHandler.css`: Function to interact with Local and Sync storage.
+
+## Data Storage
+
+The data tracked by this extension is stored locally on your device. This includes the book names and chapter numbers you have saved. While this ensures quick access and offline functionality, it also means that the data is at risk of being deleted if you clear your browser data or uninstall the extension.
+
+### Cloud Sync
+
+At the end of every day, the extension syncs your data to the cloud. This ensures that your reading progress is backed up and can be restored if necessary. If the local data is ever empty (for example, after clearing browser data or reinstalling the extension), the extension will automatically pull the data from the cloud to restore your reading progress.
+
 
 ## Contributing
 
@@ -90,3 +100,25 @@ We welcome contributions to improve this project! To contribute, please follow t
 8. **Wait for Approval**: Wait for the project maintainers to review your pull request. They may ask for changes before it can be merged.
 
 Thank you for your contributions! 
+
+## Disclaimer
+
+This extension is open-sourced, and the code in this repository is the same as the code published in the Chrome Web Store. You can verify this by comparing the source code here with the unpacked extension files.
+
+To verify that the code in this repository matches the one in the Chrome Web Store:
+
+1. Clone this repository:
+    ```bash
+    git clone https://github.com/Hitarth-Kothari/ChapterTracker
+    ```
+
+2. Download the extension from the Chrome Web Store and unpack it:
+    - Go to `chrome://extensions/`
+    - Enable "Developer mode"
+    - Click "Pack extension..." and select the downloaded extension
+
+3. Compare the files from the repository and the unpacked extension.
+
+If you find any discrepancies, please report them as an issue in this repository.
+
+We are committed to transparency. The code you see in this repository is exactly what is published in the Chrome Web Store. Our build process ensures that no changes are made between the code checked into this repository and the code uploaded to the store. If you have any questions or concerns, feel free to open an issue or contact us directly.
