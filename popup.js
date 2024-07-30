@@ -32,8 +32,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   // Load saved books from local storage first, then fall back to sync storage if empty
   let books = await getLocalData('books') || [];
+  console.log(books);
   if (books.length === 0) {
-    books = await getSyncData('books') || [];
+    await pullDataFromCloud();
+    books = await getLocalData('books') || [];
   }
   books.forEach(book => addBookToDOM(book));
 
