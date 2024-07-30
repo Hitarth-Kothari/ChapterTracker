@@ -21,7 +21,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
           if (chapterNumber > book.chapterNumber) {
             chrome.notifications.create({
               type: 'basic',
-              iconUrl: 'chrome_icon.png', // Relative to manifest.json
+              iconUrl: 'icon.png', // Relative to manifest.json
               title: 'Update Chapter',
               message: `You are on a new chapter of ${bookName}. Do you want to update the chapter number?`,
               buttons: [{ title: 'Yes' }, { title: 'No' }],
@@ -35,7 +35,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         } else {
           chrome.notifications.create({
             type: 'basic',
-            iconUrl: 'chrome_icon.png', // Relative to manifest.json
+            iconUrl: 'icon.png', // Relative to manifest.json
             title: 'Add Book to Directory',
             message: `Do you want to add ${bookName} (Chapter ${chapterNumber}) to the directory?`,
             buttons: [{ title: 'Yes' }, { title: 'No' }],
