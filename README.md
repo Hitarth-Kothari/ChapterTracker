@@ -10,6 +10,8 @@ A Chrome extension to track the books you are reading along with their chapters.
 4. [Supported Sites](#supported-sites)
 5. [File Structure](#file-structure)
 6. [Contributing](#contributing)
+7. [Disclaimer](#disclaimer)
+8. [Data Storage](#data-storage)
 
 ## Features
 
@@ -88,3 +90,29 @@ We welcome contributions to improve this project! To contribute, please follow t
 8. **Wait for Approval**: Wait for the project maintainers to review your pull request. They may ask for changes before it can be merged.
 
 Thank you for your contributions! 
+
+## Disclaimer
+
+This extension is open-sourced, and the code in this repository is the same as the code published in the Chrome Web Store. You can verify this by comparing the source code here with the unpacked extension files.
+
+To verify that the code in this repository matches the one in the Chrome Web Store:
+
+1. Clone this repository:
+    ```bash
+    git clone https://github.com/Hitarth-Kothari/ChapterTracker
+    ```
+
+2. Download the extension from the Chrome Web Store and unpack it:
+    - Go to `chrome://extensions/`
+    - Enable "Developer mode"
+    - Click "Pack extension..." and select the downloaded extension
+
+3. Compare the files from the repository and the unpacked extension.
+
+If you find any discrepancies, please report them as an issue in this repository.
+
+We are committed to transparency. The code you see in this repository is exactly what is published in the Chrome Web Store. Our build process ensures that no changes are made between the code checked into this repository and the code uploaded to the store. If you have any questions or concerns, feel free to open an issue or contact us directly.
+
+## Data Storage
+
+The data tracked by this extension is stored locally on your device. This includes the book names and chapter numbers you have saved. While this ensures quick access and offline functionality, it also means that the data is at risk of being deleted if you clear your browser data or uninstall the extension.
