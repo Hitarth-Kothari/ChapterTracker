@@ -2,6 +2,15 @@
 
 A Chrome extension to track the books you are reading along with their chapters.
 
+## Table of Contents
+
+1. [Features](#features)
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [Supported Sites](#supported-sites)
+5. [File Structure](#file-structure)
+6. [Contributing](#contributing)
+
 ## Features
 
 - Toggle input visibility using a checkbox.
@@ -44,3 +53,38 @@ A Chrome extension to track the books you are reading along with their chapters.
 - `popup.js`: The JavaScript logic for handling the popup functionality.
 - `utils.js`: Contains shared functions and constants used by other scripts.
 - `styles.css`: Custom styles for the popup interface.
+
+## Contributing
+
+We welcome contributions to improve this project! To contribute, please follow these steps:
+
+1. **Fork the Repository**: Click the "Fork" button on the top right of the repository page to create a copy of the repository on your own GitHub account.
+
+2. **Clone Your Fork**: Clone your forked repository to your local machine.
+    ```bash
+    git clone https://github.com/Hitarth-Kothari/ChapterTracker
+    ```
+
+3. **Create a Branch**: Create a new branch for your feature or bug fix.
+    ```bash
+    git checkout -b feature-or-bugfix-name
+    ```
+
+4. **Write Code**: Make your changes or add your new features.
+
+5. **Commit Changes**: Commit your changes with a descriptive commit message.
+    ```bash
+    git add .
+    git commit -m "Description of the feature or fix"
+    ```
+
+6. **Push to Your Fork**: Push your changes to your forked repository.
+    ```bash
+    git push origin feature-or-bugfix-name
+    ```
+
+7. **Create a Pull Request**: Go to the original repository and create a pull request from your forked repository's branch. Provide a clear description of what you have done.
+
+8. **Wait for Approval**: Wait for the project maintainers to review your pull request. They may ask for changes before it can be merged.
+
+Thank you for your contributions! 
