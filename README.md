@@ -5,6 +5,7 @@ A Chrome extension to track the books you are reading along with their chapters.
 ## Features
 
 - Toggle input visibility using a checkbox.
+- Toggle notifications on or off using a checkbox.
 - Add books with chapter numbers by pasting the link.
 - View a list of all saved books and their chapters.
 - Increment or decrement the chapter number using a number input field.
@@ -23,12 +24,13 @@ A Chrome extension to track the books you are reading along with their chapters.
 
 1. Click on the extension icon in the Chrome toolbar to open the popup.
 2. Use the toggle switch to show or hide the input fields.
-3. Paste the book link into the input field and click "Save".
-4. The book name and chapter number will be extracted and saved.
-5. Use the search bar to filter books by name.
-6. Adjust the chapter number using the increment/decrement arrows in the number input field.
-7. Click the red strip on the right side of a book item to delete it from the list.
-8. The extension will check if the user visits a link from a supported site and notify them if they want to add or update the book's chapter.
+3. Use the toggle switch to enable or disable notifications.
+4. Paste the book link into the input field and click "Save".
+5. The book name and chapter number will be extracted and saved.
+6. Use the search bar to filter books by name.
+7. Adjust the chapter number using the increment/decrement arrows in the number input field.
+8. Click the red strip on the right side of a book item to delete it from the list.
+9. The extension will check if the user visits a link from a supported site and notify them if they want to add or update the book's chapter.
 
 ## Supported Sites
 
