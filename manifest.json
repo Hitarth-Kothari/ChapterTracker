@@ -3,8 +3,18 @@
     "name": "Book Chapter Tracker",
     "version": "1.0",
     "description": "Store and manage book chapters.",
-    "permissions": ["storage"],
+    "permissions": ["storage", "tabs", "notifications"],
+    "background": {
+      "service_worker": "background.js"
+    },
     "action": {
-        "default_popup": "popup.html"
-    }
-}
+      "default_popup": "popup.html"
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["chrome_icon.png"],
+        "matches": ["<all_urls>"]
+      }
+    ]
+  }
+  
