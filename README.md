@@ -42,4 +42,5 @@ A Chrome extension to track the books you are reading along with their chapters.
 - `background.js`: Handles the background tasks such as monitoring tabs and sending notifications.
 - `popup.html`: The HTML structure for the popup interface.
 - `popup.js`: The JavaScript logic for handling the popup functionality.
+- `utils.js`: Contains shared functions and constants used by other scripts.
 - `styles.css`: Custom styles for the popup interface.
