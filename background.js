@@ -6,9 +6,16 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     const [bookName, chapterNumber] = parseLink(tab.url);
     console.log('Parsed link:', bookName, chapterNumber);
     if (bookName && chapterNumber) {
-      chrome.storage.local.get(['books'], function(result) {
+      chrome.storage.local.get(['books', 'notificationsEnabled'], function(result) {
         const books = result.books || [];
+        const notificationsEnabled = result.notificationsEnabled !== false;
         const book = books.find(b => b.bookName === bookName);
+
+        if (!notificationsEnabled) {
+          console.log('Notifications are disabled.');
+          return;
+        }
+
         if (book) {
           if (chapterNumber > book.chapterNumber) {
             chrome.notifications.create({

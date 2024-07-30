@@ -5,13 +5,31 @@ document.addEventListener('DOMContentLoaded', function() {
   const toggleInputs = document.getElementById('toggle-inputs');
   const inputContainer = document.getElementById('input-container');
   const customCheckbox = document.getElementById('custom-checkbox');
+  const toggleNotifications = document.getElementById('toggle-notifications');
+  const notificationsCheckbox = document.getElementById('notifications-checkbox');
   const searchBar = document.getElementById('search-bar');
+
+  // Load notification setting
+  chrome.storage.local.get(['notificationsEnabled'], function(result) {
+    const notificationsEnabled = result.notificationsEnabled !== false;
+    toggleNotifications.checked = notificationsEnabled;
+    notificationsCheckbox.classList.toggle('bg-green-500', notificationsEnabled);
+    notificationsCheckbox.classList.toggle('bg-gray-600', !notificationsEnabled);
+  });
 
   // Toggle input fields visibility and checkbox style
   toggleInputs.addEventListener('change', function() {
     inputContainer.classList.toggle('hidden', !this.checked);
     customCheckbox.classList.toggle('bg-green-500', this.checked);
     customCheckbox.classList.toggle('bg-gray-600', !this.checked);
+  });
+
+  // Toggle notifications
+  toggleNotifications.addEventListener('change', function() {
+    const enabled = this.checked;
+    chrome.storage.local.set({ notificationsEnabled: enabled });
+    notificationsCheckbox.classList.toggle('bg-green-500', enabled);
+    notificationsCheckbox.classList.toggle('bg-gray-600', !enabled);
   });
 
   // Load saved books

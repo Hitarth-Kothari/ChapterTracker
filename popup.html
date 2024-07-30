@@ -8,13 +8,23 @@
 <body class="p-4 bg-gray-900 text-white">
   <h1 class="text-xl font-bold mb-4 flex justify-center">Book Chapter Tracker</h1>
 
-  <label class="inline-flex items-center cursor-pointer mb-4">
-    <input type="checkbox" id="toggle-inputs" class="sr-only peer">
-    <span id="custom-checkbox" class="relative w-6 h-6 bg-gray-600 rounded-full peer-checked:bg-green-500">
-      <span class="absolute inset-0 m-auto h-3 w-3 bg-gray-900 rounded-full transition-all duration-200"></span>
-    </span>
-    <span class="ml-3 text-sm font-medium text-gray-300">Toggle Inputs</span>
-  </label>
+  <div class="flex justify-between mb-4">
+    <label class="inline-flex items-center cursor-pointer">
+      <input type="checkbox" id="toggle-inputs" class="sr-only peer">
+      <span id="custom-checkbox" class="relative w-6 h-6 bg-gray-600 rounded-full peer-checked:bg-green-500">
+        <span class="absolute inset-0 m-auto h-3 w-3 bg-gray-900 rounded-full transition-all duration-200"></span>
+      </span>
+      <span class="ml-3 text-sm font-medium text-gray-300">Toggle Inputs</span>
+    </label>
+    
+    <label class="inline-flex items-center cursor-pointer">
+      <input type="checkbox" id="toggle-notifications" class="sr-only peer">
+      <span id="notifications-checkbox" class="relative w-6 h-6 bg-gray-600 rounded-full peer-checked:bg-green-500">
+        <span class="absolute inset-0 m-auto h-3 w-3 bg-gray-900 rounded-full transition-all duration-200"></span>
+      </span>
+      <span class="ml-3 text-sm font-medium text-gray-300">Notifications</span>
+    </label>
+  </div>
 
   <div id="input-container" class="hidden">
     <input type="text" id="link-input" placeholder="Paste link here" class="block w-full p-2 mb-4 text-white border border-gray-600 rounded-lg bg-gray-800 focus:ring-blue-500 focus:border-blue-500">

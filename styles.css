@@ -1,3 +1,4 @@
+/* General styling */
 body {
     font-family: Arial, sans-serif;
     width: 400px;
@@ -47,4 +48,18 @@ button:hover {
 
 .book-item button:hover {
     background-color: #666666;
+}
+
+#books-list::-webkit-scrollbar {
+  display: none;
+}
+
+#books-list {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#books-list {
+  max-height: 300px; /* or any height you prefer */
+  overflow-y: scroll;
 }
