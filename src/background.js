@@ -9,7 +9,6 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
     // Perform migration if necessary
     if (previousVersion < '1.1.0') {
-      // Example migration code
       const books = await getLocalData('books') || [];
       const migratedBooks = books.map(book => {
         // Perform any necessary data transformations
