@@ -15,3 +15,4 @@
 ## Technical Improvements
 - Added comprehensive error handling to async operations in `storageHandler.js` to ensure stability and better debugging capabilities.
 - Improved logging for sync operations to facilitate easier troubleshooting and monitoring.
+- Added migration support for when updating extension
