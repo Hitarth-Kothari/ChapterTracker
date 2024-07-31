@@ -16,7 +16,7 @@
   "web_accessible_resources": [
     {
       "resources": ["icon.png", "utils.js", "storageHandler.js"],
-      "matches": ["<all_urls>"]
+      "matches": ["*://*.asuracomic.net/*"]
     }
   ]
 }
