@@ -1,6 +1,30 @@
 importScripts('storageHandler.js');
 importScripts('parser.js');
 
+chrome.runtime.onInstalled.addListener(async (details) => {
+  if (details.reason === 'update') {
+    const previousVersion = details.previousVersion;
+    const currentVersion = chrome.runtime.getManifest().version;
+    console.log(`Updating from version ${previousVersion} to ${currentVersion}`);
+
+    // Perform migration if necessary
+    if (previousVersion < '1.1.0') {
+      // Example migration code
+      const books = await getLocalData('books') || [];
+      const migratedBooks = books.map(book => {
+        // Perform any necessary data transformations
+        return {
+          ...book,
+          // Add mainLink if it doesn't exist
+          mainLink: book.mainLink || `https://asuracomic.net/series/${book.bookName.replace(/\s+/g, '-').toLowerCase()}/chapter/${book.chapterNumber}`
+        };
+      });
+      await setLocalData('books', migratedBooks);
+      console.log('Data migration completed.');
+    }
+  }
+});
+
 chrome.runtime.onStartup.addListener(async () => {
   const books = await getLocalData('books') || [];
   if (books.length === 0) {
