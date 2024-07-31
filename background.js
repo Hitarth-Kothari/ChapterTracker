@@ -25,9 +25,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     return;
   }
 
-  notificationsDisabledLogged = false;  // Reset the flag if notifications are enabled
+  notificationsDisabledLogged = false;
 
-  console.log('Tab updated:', tabId, changeInfo, tab);
   if (changeInfo.status === 'complete' && tab.url) {
     const [bookName, chapterNumber] = parseLink(tab.url);
     console.log('Parsed link:', bookName, chapterNumber);
