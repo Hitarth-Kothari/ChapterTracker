@@ -5,7 +5,7 @@
   "description": "Store and manage book chapters.",
   "permissions": ["storage", "tabs", "notifications"],
   "icons": {
-    "128": "icon.png"
+    "128": "icons/icon.png"
   },
   "background": {
     "service_worker": "background.js"
