@@ -2,7 +2,7 @@
 
 ## New Features
 - Save link to book for easy access to book.
-- When user clicks on the book item, it should redirect user to the book link last visited.
+- When user clicks on the book item, it should redirect user to the books home link last visited.
 - Automatically update the chapter number without notification requirements when the user visits a book already stored and the chapter number is greater than the previously stored chapter by at most 3.
 - Automatically update the main link if the user visits a book that is stored in the database but has a different main link.
 
