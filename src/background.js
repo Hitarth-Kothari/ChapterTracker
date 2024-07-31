@@ -61,6 +61,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         const book = books[bookIndex];
         if (mainLink !== book.mainLink) {
           books[bookIndex].mainLink = mainLink;
+          await setLocalData('books', books);
           console.log('Main link updated:', mainLink);
         }
 
