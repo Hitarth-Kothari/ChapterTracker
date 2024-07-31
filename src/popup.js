@@ -43,12 +43,22 @@ document.addEventListener('DOMContentLoaded', async function() {
   saveButton.addEventListener('click', async function() {
     const link = linkInput.value.trim();
     if (link) {
-      const [bookName, chapterNumber] = parseLink(link);
-      let books = await getLocalData('books') || [];
-      books.push({ bookName, chapterNumber });
-      await setLocalData('books', books);
-      addBookToDOM({ bookName, chapterNumber });
-      linkInput.value = '';
+      const [bookName, chapterNumber, mainLink] = parseLink(link);
+      if (bookName && chapterNumber && mainLink) {
+        let books = await getLocalData('books') || [];
+        const existingBookIndex = books.findIndex(b => b.bookName === bookName);
+        if (existingBookIndex !== -1) {
+          // Update existing book
+          books[existingBookIndex].chapterNumber = chapterNumber;
+          books[existingBookIndex].mainLink = mainLink;
+        } else {
+          // Add new book
+          books.push({ bookName, chapterNumber, mainLink });
+        }
+        await setLocalData('books', books);
+        addBookToDOM({ bookName, chapterNumber, mainLink });
+        linkInput.value = '';
+      }
     }
   });
 
@@ -59,6 +69,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const textElement = document.createElement('span');
     textElement.textContent = `${book.bookName}`;
+    textElement.className = 'cursor-pointer';
+    textElement.addEventListener('click', function() {
+      window.open(book.mainLink, '_blank');
+    });
 
     const numberInputContainer = document.createElement('div');
     numberInputContainer.className = 'flex items-center';
@@ -72,7 +86,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       let books = await getLocalData('books') || [];
       const updatedBooks = books.map(b => {
         if (b.bookName === book.bookName) {
-          return { bookName: b.bookName, chapterNumber: newChapterNumber };
+          return { bookName: b.bookName, chapterNumber: newChapterNumber, mainLink: b.mainLink };
         }
         return b;
       });

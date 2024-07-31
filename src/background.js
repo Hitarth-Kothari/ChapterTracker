@@ -28,27 +28,37 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   notificationsDisabledLogged = false;
 
   if (changeInfo.status === 'complete' && tab.url) {
-    const [bookName, chapterNumber] = parseLink(tab.url);
-    console.log('Parsed link:', bookName, chapterNumber);
-    if (bookName && chapterNumber) {
-      const result = await getLocalData('books');
-      const books = result || [];
+    const [bookName, chapterNumber, mainLink] = parseLink(tab.url);
+    console.log('Parsed link:', bookName, chapterNumber, mainLink);
+    if (bookName && chapterNumber && mainLink) {
+      let books = await getLocalData('books') || [];
+      const bookIndex = books.findIndex(b => b.bookName === bookName);
 
-      const book = books.find(b => b.bookName === bookName);
+      if (bookIndex !== -1) {
+        const book = books[bookIndex];
+        if (mainLink !== book.mainLink) {
+          books[bookIndex].mainLink = mainLink;
+          console.log('Main link updated:', mainLink);
+        }
 
-      if (book) {
         if (chapterNumber > book.chapterNumber) {
-          chrome.notifications.create({
-            type: 'basic',
-            iconUrl: 'icons/icon.png',
-            title: 'Update Chapter',
-            message: `You are on a new chapter of ${bookName}. Do you want to update the chapter number?`,
-            buttons: [{ title: 'Yes' }, { title: 'No' }],
-            requireInteraction: true,
-          }, (notificationId) => {
-            console.log('Notification created with ID:', notificationId);
-            setLocalData('notificationData', { notificationId, bookName, chapterNumber });
-          });
+          if (chapterNumber - book.chapterNumber <= 3) {
+            books[bookIndex].chapterNumber = chapterNumber;
+            console.log('Chapter number updated automatically:', chapterNumber);
+            await setLocalData('books', books);
+          } else {
+            chrome.notifications.create({
+              type: 'basic',
+              iconUrl: 'icons/icon.png',
+              title: 'Update Chapter',
+              message: `You are on a new chapter of ${bookName}. Do you want to update the chapter number?`,
+              buttons: [{ title: 'Yes' }, { title: 'No' }],
+              requireInteraction: true,
+            }, (notificationId) => {
+              console.log('Notification created with ID:', notificationId);
+              setLocalData('notificationData', { notificationId, bookName, chapterNumber });
+            });
+          }
         }
       } else {
         chrome.notifications.create({
@@ -60,7 +70,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
           requireInteraction: true,
         }, (notificationId) => {
           console.log('Notification created with ID:', notificationId);
-          setLocalData('notificationData', { notificationId, bookName, chapterNumber });
+          setLocalData('notificationData', { notificationId, bookName, chapterNumber, mainLink });
         });
       }
     }
@@ -69,16 +79,17 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
   console.log('Notification button clicked:', notificationId, buttonIndex);
-  const { notificationId: savedNotificationId, bookName, chapterNumber } = await getLocalData('notificationData');
+  const { notificationId: savedNotificationId, bookName, chapterNumber, mainLink } = await getLocalData('notificationData');
   if (notificationId === savedNotificationId && buttonIndex === 0) {
-    const books = await getLocalData('books') || [];
+    let books = await getLocalData('books') || [];
     const bookIndex = books.findIndex(b => b.bookName === bookName);
     if (bookIndex !== -1) {
       books[bookIndex].chapterNumber = chapterNumber;
+      books[bookIndex].mainLink = mainLink;
       console.log('Chapter number updated:', books[bookIndex]);
     } else {
-      books.push({ bookName, chapterNumber });
-      console.log('Book added:', { bookName, chapterNumber });
+      books.push({ bookName, chapterNumber, mainLink });
+      console.log('Book added:', { bookName, chapterNumber, mainLink });
     }
     await setLocalData('books', books);
     console.log('Books updated in storage:', books);
@@ -91,32 +102,3 @@ chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIn
     });
   }
 });
-
-async function syncDataToCloud() {
-  const books = await getLocalData('books') || [];
-  if (books.length > 0) {
-    await clearSyncData();
-    await setSyncData('books', books);
-    const now = Date.now();
-    await setSyncData('lastSyncTime', now);
-    console.log('Data synced to the cloud:', books);
-  } else {
-    console.log('Local storage is empty. Sync aborted.');
-  }
-}
-
-async function pullDataFromCloud() {
-  const books = await getSyncData('books') || [];
-  await setLocalData('books', books);
-  console.log('Data pulled from the cloud and saved locally:', books);
-}
-
-async function shouldSync() {
-  const lastSyncTime = await getSyncData('lastSyncTime');
-  if (!lastSyncTime) {
-    return true;
-  }
-  const twelveHoursInMillis = 12 * 60 * 60 * 1000;
-  const now = Date.now();
-  return (now - lastSyncTime) > twelveHoursInMillis;
-}
