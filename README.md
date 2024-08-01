@@ -1,6 +1,6 @@
 # Book Chapter Tracker
 
-A Chrome extension to track the books you are reading along with their chapters.
+A [Chrome extension](https://chromewebstore.google.com/detail/book-chapter-tracker/figbmhommcdchljjlmdloamgiocdidfp?hl=en) to track the books you are reading along with their chapters.
 
 ## Table of Contents
 
