@@ -1,4 +1,4 @@
-const allowedHostnames = ['asuracomic.net']; // Add more allowed hostnames as needed
+const allowedHostnames = ['asuracomic.net', 'reaperscans.com']; // Added 'reaperscans.com'
 
 function parseLink(link) {
   try {
@@ -18,7 +18,19 @@ function parseLink(link) {
           console.log('No valid chapter number found in URL.');
           return [null, null, null];
         }
-      } 
+      } else if (url.hostname === 'reaperscans.com') {
+        const parts = url.pathname.split('/');
+        const chapterNumber = parseInt(parts.pop().replace('chapter-', ''), 10);
+        const mainLink = `${url.origin}/series/${parts[2]}`;
+        if (!isNaN(chapterNumber)) {
+          const bookName = parts[2].replace(/-/g, ' ');
+          const capitalizedBookName = bookName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+          return [capitalizedBookName, chapterNumber, mainLink];
+        } else {
+          console.log('No valid chapter number found in URL.');
+          return [null, null, null];
+        }
+      }
       // Add more conditions for other hostnames here
     } else {
       console.log('URL does not match allowed hostnames, skipping parse.');
