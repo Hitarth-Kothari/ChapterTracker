@@ -23,13 +23,19 @@ document.addEventListener('DOMContentLoaded', async function() {
   });
 
   // Toggle notifications
-  toggleNotifications.addEventListener('change', function() {
+  toggleNotifications.addEventListener('change', async function() {
     const enabled = this.checked;
-    setLocalData('notificationsEnabled', enabled);
+    await setLocalData('notificationsEnabled', enabled);
     notificationsCheckbox.classList.toggle('bg-green-500', enabled);
     notificationsCheckbox.classList.toggle('bg-gray-600', !enabled);
+    
+    if (enabled) {
+      // Clear notification data when notifications are turned on
+      await setLocalData('notificationData', { bookName: null, chapterNumber: null, mainLink: null });
+      console.log('Notifications enabled, cleared last notification data.');
+    }
   });
-
+  
   // Load saved books from local storage first, then fall back to sync storage if empty
   let books = await getLocalData('books') || [];
   console.log(books);

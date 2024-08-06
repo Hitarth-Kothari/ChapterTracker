@@ -10,9 +10,13 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     if (previousVersion < '1.1.0') {
       try {
         const books = await getLocalData('books') || [];
-        const migratedBooks = books.map(book => ({
+        const migratedBooks = books.map((book) => ({
           ...book,
-          mainLink: book.mainLink || `https://asuracomic.net/series/${book.bookName.replace(/\s+/g, '-').toLowerCase()}/chapter/${book.chapterNumber}`
+          mainLink:
+            book.mainLink ||
+            `https://asuracomic.net/series/${book.bookName
+              .replace(/\s+/g, '-')
+              .toLowerCase()}/chapter/${book.chapterNumber}`,
         }));
         await setLocalData('books', migratedBooks);
         console.log('Data migration completed.');
@@ -43,7 +47,7 @@ let notificationsDisabledLogged = false;
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   try {
-    const notificationsEnabled = await getLocalData('notificationsEnabled') !== false;
+    const notificationsEnabled = (await getLocalData('notificationsEnabled')) !== false;
     if (!notificationsEnabled) {
       if (!notificationsDisabledLogged) {
         console.log('Notifications are disabled.');
@@ -59,7 +63,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       console.log('Parsed link:', bookName, chapterNumber, mainLink);
       if (bookName && chapterNumber && mainLink) {
         let books = await getLocalData('books') || [];
-        const bookIndex = books.findIndex(b => b.bookName === bookName);
+        const bookIndex = books.findIndex((b) => b.bookName === bookName);
 
         if (bookIndex !== -1) {
           const book = books[bookIndex];
@@ -75,31 +79,53 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
               console.log('Chapter number updated automatically:', chapterNumber);
               await setLocalData('books', books);
             } else {
-              chrome.notifications.create({
-                type: 'basic',
-                iconUrl: 'icons/icon.png',
-                title: 'Update Chapter',
-                message: `You are on a new chapter of ${bookName}. Do you want to update the chapter number?`,
-                buttons: [{ title: 'Yes' }, { title: 'No' }],
-                requireInteraction: true,
-              }, (notificationId) => {
-                console.log('Notification created with ID:', notificationId);
-                setLocalData('notificationData', { notificationId, bookName, chapterNumber });
-              });
+              const lastNotification = (await getLocalData('notificationData')) || {
+                bookName: null,
+                chapterNumber: null,
+              };
+              if (lastNotification.bookName !== bookName || lastNotification.chapterNumber !== chapterNumber) {
+                chrome.notifications.create(
+                  {
+                    type: 'basic',
+                    iconUrl: 'icons/icon.png',
+                    title: 'Update Chapter',
+                    message: `You are on a new chapter of ${bookName}. Do you want to update the chapter number?`,
+                    buttons: [{ title: 'Yes' }, { title: 'No' }],
+                    requireInteraction: true,
+                  },
+                  async (notificationId) => {
+                    console.log('Notification created with ID:', notificationId);
+                    await setLocalData('notificationData', { notificationId, bookName, chapterNumber });
+                  }
+                );
+              } else {
+                console.log('Notification not created because it matches the last notification.');
+              }
             }
           }
         } else {
-          chrome.notifications.create({
-            type: 'basic',
-            iconUrl: 'icons/icon.png',
-            title: 'Add Book to Directory',
-            message: `Do you want to add ${bookName} (Chapter ${chapterNumber}) to the directory?`,
-            buttons: [{ title: 'Yes' }, { title: 'No' }],
-            requireInteraction: true,
-          }, (notificationId) => {
-            console.log('Notification created with ID:', notificationId);
-            setLocalData('notificationData', { notificationId, bookName, chapterNumber, mainLink });
-          });
+          const lastNotification = (await getLocalData('notificationData')) || {
+            bookName: null,
+            chapterNumber: null,
+          };
+          if (lastNotification.bookName !== bookName || lastNotification.chapterNumber !== chapterNumber) {
+            chrome.notifications.create(
+              {
+                type: 'basic',
+                iconUrl: 'icons/icon.png',
+                title: 'Add Book to Directory',
+                message: `Do you want to add ${bookName} (Chapter ${chapterNumber}) to the directory?`,
+                buttons: [{ title: 'Yes' }, { title: 'No' }],
+                requireInteraction: true,
+              },
+              async (notificationId) => {
+                console.log('Notification created with ID:', notificationId);
+                await setLocalData('notificationData', { notificationId, bookName, chapterNumber, mainLink });
+              }
+            );
+          } else {
+            console.log('Notification not created because it matches the last notification.');
+          }
         }
       }
     }
@@ -111,10 +137,11 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
   try {
     console.log('Notification button clicked:', notificationId, buttonIndex);
-    const { notificationId: savedNotificationId, bookName, chapterNumber, mainLink } = await getLocalData('notificationData');
+    const { notificationId: savedNotificationId, bookName, chapterNumber, mainLink } =
+      (await getLocalData('notificationData')) || {};
     if (notificationId === savedNotificationId && buttonIndex === 0) {
       let books = await getLocalData('books') || [];
-      const bookIndex = books.findIndex(b => b.bookName === bookName);
+      const bookIndex = books.findIndex((b) => b.bookName === bookName);
       if (bookIndex !== -1) {
         books[bookIndex].chapterNumber = chapterNumber;
         books[bookIndex].mainLink = mainLink;
