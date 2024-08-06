@@ -75,31 +75,37 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
               console.log('Chapter number updated automatically:', chapterNumber);
               await setLocalData('books', books);
             } else {
-              chrome.notifications.create({
-                type: 'basic',
-                iconUrl: 'icons/icon.png',
-                title: 'Update Chapter',
-                message: `You are on a new chapter of ${bookName}. Do you want to update the chapter number?`,
-                buttons: [{ title: 'Yes' }, { title: 'No' }],
-                requireInteraction: true,
-              }, (notificationId) => {
-                console.log('Notification created with ID:', notificationId);
-                setLocalData('notificationData', { notificationId, bookName, chapterNumber });
-              });
+              const lastNotification = await getLocalData('notificationData') || { bookName: null, chapterNumber: null };
+              if (lastNotification.bookName !== bookName || lastNotification.chapterNumber !== chapterNumber) {
+                chrome.notifications.create({
+                  type: 'basic',
+                  iconUrl: 'icons/icon.png',
+                  title: 'Update Chapter',
+                  message: `You are on a new chapter of ${bookName}. Do you want to update the chapter number?`,
+                  buttons: [{ title: 'Yes' }, { title: 'No' }],
+                  requireInteraction: true,
+                }, async (notificationId) => {
+                  console.log('Notification created with ID:', notificationId);
+                  await setLocalData('notificationData', { notificationId, bookName, chapterNumber });
+                });
+              }
             }
           }
         } else {
-          chrome.notifications.create({
-            type: 'basic',
-            iconUrl: 'icons/icon.png',
-            title: 'Add Book to Directory',
-            message: `Do you want to add ${bookName} (Chapter ${chapterNumber}) to the directory?`,
-            buttons: [{ title: 'Yes' }, { title: 'No' }],
-            requireInteraction: true,
-          }, (notificationId) => {
-            console.log('Notification created with ID:', notificationId);
-            setLocalData('notificationData', { notificationId, bookName, chapterNumber, mainLink });
-          });
+          const lastNotification = await getLocalData('notificationData') || { bookName: null, chapterNumber: null };
+          if (lastNotification.bookName !== bookName || lastNotification.chapterNumber !== chapterNumber) {
+            chrome.notifications.create({
+              type: 'basic',
+              iconUrl: 'icons/icon.png',
+              title: 'Add Book to Directory',
+              message: `Do you want to add ${bookName} (Chapter ${chapterNumber}) to the directory?`,
+              buttons: [{ title: 'Yes' }, { title: 'No' }],
+              requireInteraction: true,
+            }, async (notificationId) => {
+              console.log('Notification created with ID:', notificationId);
+              await setLocalData('notificationData', { notificationId, bookName, chapterNumber, mainLink });
+            });
+          }
         }
       }
     }
