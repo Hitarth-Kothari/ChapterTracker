@@ -1,4 +1,4 @@
-const allowedHostnames = ['asuracomic.net', 'reaperscans.com']; // Added 'reaperscans.com'
+const allowedHostnames = ['asuracomic.net', 'reaperscans.com', 'manhwaclan.com']; // Added 'manhwaclan.com'
 
 function parseLink(link) {
   try {
@@ -22,6 +22,18 @@ function parseLink(link) {
         const parts = url.pathname.split('/');
         const chapterNumber = parseInt(parts.pop().replace('chapter-', ''), 10);
         const mainLink = `${url.origin}/series/${parts[2]}`;
+        if (!isNaN(chapterNumber)) {
+          const bookName = parts[2].replace(/-/g, ' ');
+          const capitalizedBookName = bookName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+          return [capitalizedBookName, chapterNumber, mainLink];
+        } else {
+          console.log('No valid chapter number found in URL.');
+          return [null, null, null];
+        }
+      } else if (url.hostname === 'manhwaclan.com') {
+        const parts = url.pathname.split('/');
+        const chapterNumber = parseInt(parts.pop(), 10);
+        const mainLink = `${url.origin}/manga/${parts[2]}`;
         if (!isNaN(chapterNumber)) {
           const bookName = parts[2].replace(/-/g, ' ');
           const capitalizedBookName = bookName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
