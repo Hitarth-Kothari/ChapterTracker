@@ -16,3 +16,6 @@
 - **Logging Enhancements**: Improved logging for sync operations to facilitate easier troubleshooting and monitoring.
 - **Migration Support**: Ensured migration support for updating the extension is robust and user-friendly.
 - **Code Optimization**: Refined the logic for checking and creating notifications to improve performance and reliability.
+
+## Miscellaneous
+- **Extension Renaming**: The extension has been renamed to **Manhwa Chapter Tracker** to better reflect its purpose and capabilities.
