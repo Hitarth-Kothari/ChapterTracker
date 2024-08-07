@@ -1,13 +1,16 @@
-const allowedHostnames = ['asuracomic.net', 'reaperscans.com', 'manhwaclan.com']; // Added 'manhwaclan.com'
+const allowedHostnames = ['asuracomic.net', 'reaperscans.com', 'manhwaclan.com'];
 
 function parseLink(link) {
   try {
     const url = new URL(link);
     if (allowedHostnames.includes(url.hostname)) {
+      const parts = url.pathname.split('/');
+      
       if (url.hostname === 'asuracomic.net') {
-        const parts = url.pathname.split('/');
-        const chapterNumber = parseInt(parts.pop(), 10);
+        const chapterPart = parts.pop();
+        const chapterNumber = parseInt(chapterPart, 10);
         const mainLink = `${url.origin}/series/${parts[2]}`;
+        
         if (!isNaN(chapterNumber)) {
           let bookNameParts = parts.slice(2, -1).join(' ').split('-');
           bookNameParts = bookNameParts.filter(part => !(/[a-zA-Z]/.test(part) && /\d/.test(part)));
@@ -18,10 +21,12 @@ function parseLink(link) {
           console.log('No valid chapter number found in URL.');
           return [null, null, null];
         }
+        
       } else if (url.hostname === 'reaperscans.com') {
-        const parts = url.pathname.split('/');
-        const chapterNumber = parseInt(parts.pop().replace('chapter-', ''), 10);
+        const chapterPart = parts.pop();
+        const chapterNumber = parseInt(chapterPart.replace('chapter-', ''), 10);
         const mainLink = `${url.origin}/series/${parts[2]}`;
+        
         if (!isNaN(chapterNumber)) {
           const bookName = parts[2].replace(/-/g, ' ');
           const capitalizedBookName = bookName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -30,10 +35,12 @@ function parseLink(link) {
           console.log('No valid chapter number found in URL.');
           return [null, null, null];
         }
+        
       } else if (url.hostname === 'manhwaclan.com') {
-        const parts = url.pathname.split('/');
-        const chapterNumber = parseInt(parts.pop(), 10);
+        const chapterPart = parts.pop();
+        const chapterNumber = parseInt(chapterPart.replace('chapter-', ''), 10);
         const mainLink = `${url.origin}/manga/${parts[2]}`;
+        
         if (!isNaN(chapterNumber)) {
           const bookName = parts[2].replace(/-/g, ' ');
           const capitalizedBookName = bookName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
