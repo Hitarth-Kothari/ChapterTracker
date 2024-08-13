@@ -15,11 +15,16 @@ const testCases = [
     },
     {
         description: 'Test for ManhwaClan.com valid URL',
-        url: 'https://manhwaclan.com/manga/title-name/chapter-5',
-        expected: ['Title Name', 5, 'https://manhwaclan.com/manga/title-name']
+        url: 'https://manhwaclan.com/manga/title-name/chapter-5/',
+        expected: ['Title Name', 5, 'https://manhwaclan.com/manga/title-name/']
     },
     {
         description: 'Test for FlameComics.me valid URL',
+        url: 'https://flamecomics.me/title-name-chapter-5/',
+        expected: ['Title Name', 5, 'https://flamecomics.me/title-name/']
+    },
+    {
+        description: 'Test for mangakakalot.com valid URL',
         url: 'https://flamecomics.me/title-name-chapter-5/',
         expected: ['Title Name', 5, 'https://flamecomics.me/title-name/']
     },

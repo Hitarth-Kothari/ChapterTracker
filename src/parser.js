@@ -94,6 +94,7 @@ function parseReaperScans(parts, url) {
  */
 function parseManhwaClan(parts, url) {
     try {
+        parts.pop()
         const chapterPart = parts.pop();
         const chapterNumber = parseInt(chapterPart.replace('chapter-', ''), 10);
         if (isNaN(chapterNumber)) {
@@ -102,7 +103,7 @@ function parseManhwaClan(parts, url) {
         }
         const bookName = parts[2].replace(/-/g, ' ');
         const capitalizedBookName = capitalizeWords(bookName);
-        const mainLink = `${url.origin}/manga/${parts[2]}`;
+        const mainLink = `${url.origin}/manga/${parts[2]}/`;
         return [capitalizedBookName, chapterNumber, mainLink];
     } catch (error) {
         console.log('Unexpected URL structure. Please report this issue on GitHub for review.');
