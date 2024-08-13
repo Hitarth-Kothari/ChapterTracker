@@ -24,11 +24,6 @@ const testCases = [
         expected: ['Title Name', 5, 'https://flamecomics.me/title-name/']
     },
     {
-        description: 'Test for mangakakalot.com valid URL',
-        url: 'https://flamecomics.me/title-name-chapter-5/',
-        expected: ['Title Name', 5, 'https://flamecomics.me/title-name/']
-    },
-    {
         description: 'Test for invalid hostname',
         url: 'https://unknownsite.com/manga/title-name/chapter-20',
         expected: [null, null, null]
