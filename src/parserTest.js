@@ -5,8 +5,8 @@ const { parseLink } = require('./parser.js');
 const testCases = [
     {
         description: 'Test for AsuraComic.net valid URL',
-        url: 'https://asuracomic.net/series/title-name/chapter/5',
-        expected: ['Title Name', 5, 'https://asuracomic.net/series/title-name']
+        url: 'https://asuracomic.net/series/title-name-8a9wdfyg7a38/chapter/5',
+        expected: ['Title Name', 5, 'https://asuracomic.net/series/title-name-8a9wdfyg7a38']
     },
     {
         description: 'Test for ReaperScans.com valid URL',

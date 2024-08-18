@@ -44,16 +44,20 @@ function parseLink(link) {
  */
 function parseAsuraComic(parts, url) {
     try {
-        const chapterPart = parts.pop();
-        const chapterNumber = parseInt(chapterPart, 10);
-        if (isNaN(chapterNumber)) {
+        const chapterPart = parts.pop(); // Remove and capture the chapter part
+        const chapterNumber = parseInt(chapterPart, 10); // Convert it to a number
+        const mainLink = `${url.origin}/series/${parts[2]}`; // Construct the main link
+        
+        if (!isNaN(chapterNumber)) {
+            let bookNameParts = parts.slice(2, -1).join(' ').split('-');
+            bookNameParts = bookNameParts.filter(part => !(/[a-zA-Z]/.test(part) && /\d/.test(part)));
+            const bookName = bookNameParts.join(' ');
+            const capitalizedBookName = bookName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            return [capitalizedBookName, chapterNumber, mainLink];
+        } else {
             console.log('No valid chapter number found in URL.');
             return [null, null, null];
         }
-        const bookName = parts[2].replace(/-/g, ' ');
-        const capitalizedBookName = capitalizeWords(bookName);
-        const mainLink = `${url.origin}/series/${parts[2]}`;
-        return [capitalizedBookName, chapterNumber, mainLink];
     } catch (error) {
         console.log('Unexpected URL structure. Please report this issue on GitHub for review.');
         return [null, null, null];
@@ -154,4 +158,5 @@ function capitalizeWords(str) {
     return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
-//module.exports = { parseLink }; Enable when testing
+// Enable when testing
+module.exports = { parseLink };
