@@ -161,4 +161,4 @@ function capitalizeWords(str) {
 }
 
 // Enable when testing
-module.exports = { parseLink };
+// module.exports = { parseLink };
