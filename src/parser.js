@@ -1,4 +1,4 @@
-const allowedHostnames = ['asuracomic.net', 'reaperscans.com', 'manhwaclan.com', 'flamecomics.me'];
+const allowedHostnames = ['asuracomic.net', 'reaperscans.com', 'manhwaclan.com', 'flamecomics.me', 'manhuaus.org'];
 
 /**
  * Parses a given URL and extracts the book name, chapter number, and main link.
@@ -22,6 +22,8 @@ function parseLink(link) {
             case 'reaperscans.com':
                 return parseReaperScans(parts, url);
             case 'manhwaclan.com':
+                return parseManhwaClan(parts, url);
+            case 'manhuaus.org':
                 return parseManhwaClan(parts, url);
             case 'flamecomics.me':
                 return parseFlameComics(parts, url);
@@ -159,4 +161,4 @@ function capitalizeWords(str) {
 }
 
 // Enable when testing
-module.exports = { parseLink };
+// module.exports = { parseLink };
