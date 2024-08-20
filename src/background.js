@@ -66,6 +66,9 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         const bookIndex = books.findIndex((b) => b.bookName === bookName);
 
         if (bookIndex !== -1) {
+          books.splice(bookIndex, 1);
+          books.unshift({ bookName, chapterNumber, mainLink });
+          bookIndex == 0;
           const book = books[bookIndex];
           if (mainLink !== book.mainLink) {
             books[bookIndex].mainLink = mainLink;

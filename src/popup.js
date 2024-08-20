@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
   books.forEach(book => addBookToDOM(book));
 
-  // Save book
   saveButton.addEventListener('click', async function() {
     const link = linkInput.value.trim();
     if (link) {
@@ -54,35 +53,39 @@ document.addEventListener('DOMContentLoaded', async function() {
         let books = await getLocalData('books') || [];
         const existingBookIndex = books.findIndex(b => b.bookName === bookName);
         if (existingBookIndex !== -1) {
-          // Update existing book
-          books[existingBookIndex].chapterNumber = chapterNumber;
-          books[existingBookIndex].mainLink = mainLink;
-        } else {
-          // Add new book
-          books.push({ bookName, chapterNumber, mainLink });
+          // Remove existing book
+          books.splice(existingBookIndex, 1);
         }
+        // Add the new or updated book at the beginning
+        books.unshift({ bookName, chapterNumber, mainLink });
+        
+        // Save the updated list
         await setLocalData('books', books);
-        addBookToDOM({ bookName, chapterNumber, mainLink });
+  
+        // Clear and re-render the book list in the DOM
+        booksList.innerHTML = '';
+        books.forEach(book => addBookToDOM(book));
+  
+        // Clear the input field
         linkInput.value = '';
       }
     }
   });
-
-  // Add book to DOM
+  
   function addBookToDOM(book) {
     const bookItem = document.createElement('div');
     bookItem.className = 'flex justify-between items-center bg-gray-800 text-white p-1 mb-1 border border-gray-600 rounded-lg shadow relative';
-
+  
     const textElement = document.createElement('span');
     textElement.textContent = `${book.bookName}`;
     textElement.className = 'cursor-pointer';
     textElement.addEventListener('click', function() {
       window.open(book.mainLink, '_blank');
     });
-
+  
     const numberInputContainer = document.createElement('div');
     numberInputContainer.className = 'flex items-center';
-
+  
     const numberInput = document.createElement('input');
     numberInput.type = 'number';
     numberInput.value = book.chapterNumber;
@@ -97,8 +100,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         return b;
       });
       await setLocalData('books', updatedBooks);
+      booksList.innerHTML = '';
+      updatedBooks.forEach(book => addBookToDOM(book));
     });
-
+  
     const deleteStrip = document.createElement('div');
     deleteStrip.className = 'absolute top-0 right-0 h-full w-2 bg-red-600 hover:bg-red-700 cursor-pointer rounded-r-2xl';
     deleteStrip.addEventListener('click', async function(event) {
@@ -108,14 +113,15 @@ document.addEventListener('DOMContentLoaded', async function() {
       await setLocalData('books', newBooks);
       booksList.removeChild(bookItem);
     });
-
+  
     numberInputContainer.appendChild(numberInput);
     bookItem.appendChild(textElement);
     bookItem.appendChild(numberInputContainer);
     bookItem.appendChild(deleteStrip);
-
+  
     booksList.appendChild(bookItem);
   }
+  
 
   searchBar.addEventListener('input', async function() {
     const query = this.value.trim().toLowerCase();
